@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import Zoom from "@mui/material/Zoom";
+import Axios from "axios";
 
 function CreateArea(props) {
   const [note, setNote] = useState({ title: "", content: "" });
@@ -10,24 +11,30 @@ function CreateArea(props) {
   function handleChange(event) {
     const { name, value } = event.target;
 
-    setNote((lastValue) => {
-      return { ...lastValue, [name]: value };
+    setNote((prevValue) => {
+      return { ...prevValue, [name]: value };
     });
   }
 
   function submitNote(event) {
-    props.onAdd(note); //Existe uma função no App.jsx com esse mesmo nome, que recebe essa entrada note, o que eu colocar aqui vai para la
     setNote({ title: "", content: "" });
     event.preventDefault();
+
+    Axios.post("http://localhost:3000/register", {
+      title: note.title,
+      content: note.content,
+    }).then(() => {
+      props.onRefresh();
+    });
   }
 
-  function testE() {
+  function expandInput() {
     setExpand(true);
   }
   return (
     <div>
       <form className="create-note">
-        <input onClick={testE} onChange={handleChange} name="title" placeholder="Title" value={note.title} />
+        <input onClick={expandInput} onChange={handleChange} name="title" placeholder="Title" value={note.title} />
         {expand && <textarea onChange={handleChange} name="content" placeholder="Take a note..." rows="3" value={note.content} />}
 
         <Zoom in={expand}>

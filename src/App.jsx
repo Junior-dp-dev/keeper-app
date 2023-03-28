@@ -6,38 +6,54 @@ import Footer from "./components/Footer";
 import Axios from "axios";
 
 function App() {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [notes, setNotes] = useState([]);
 
+  //Read Notes
   useEffect(() => {
-    Axios.get("http://localhost:3000/getNotes").then((response) => {
-      setNotes(response.data);
+    Axios.get(`${apiUrl}getNotes`).then(({ data }) => {
+      setNotes(data);
     });
   }, []);
 
   const refreshNotes = () => {
-    Axios.get("http://localhost:3000/getNotes").then((response) => {
-      setNotes(response.data);
+    Axios.get(`${apiUrl}getNotes`).then(({ data }) => {
+      setNotes(data);
     });
   };
 
-  function deleteNote(id) {
-    Axios.delete(`http://localhost:3000/delete/${id}`).then((response) => {
-      setNotes((prevNotes) => {
-        return prevNotes.filter((note) => {
-          return note.idkepper !== id;
-        });
-      });
+  //Creat Notes
+  const createNote = (newNote) => {
+    Axios.post(`${apiUrl}register`, {
+      title: newNote.title,
+      content: newNote.content,
+    }).then(refreshNotes);
+  };
+
+  //Edit Notes
+  const editNote = (note) => {
+    Axios.put(`${apiUrl}edit`, {
+      id: note.id,
+      title: note.title,
+      content: note.content,
+    }).then(refreshNotes);
+  };
+
+  //Delete Notes
+  const deleteNote = (id) => {
+    Axios.delete(`${apiUrl}delete/${id}`).then(() => {
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
     });
-  }
+  };
 
   return (
     <div>
       <Header />
-      <CreateArea onRefresh={refreshNotes} />
+      <CreateArea onRefresh={refreshNotes} onSubmit={createNote} />
       {notes.length === 0
         ? null
         : notes.map((notas) => {
-            return <Note key={notas.idkepper} id={notas.idkepper} title={notas.title} content={notas.content} onDelete={deleteNote} onRefresh={refreshNotes} />;
+            return <Note key={notas.id} id={notas.id} title={notas.title} content={notas.content} onDelete={deleteNote} onRefresh={refreshNotes} onEdit={editNote} />;
           })}
 
       <Footer />

@@ -12,7 +12,17 @@ function Note(props) {
 
   return (
     <>
-      <FormDialog open={open} setOpen={setOpen} id={props.id} title={props.title} content={props.content} notes={props.notes} setNotes={props.setNotes} onRefresh={props.onRefresh} />
+      <FormDialog
+        open={open}
+        setOpen={setOpen}
+        id={props.id}
+        title={props.title}
+        content={props.content}
+        notes={props.notes}
+        setNotes={props.setNotes}
+        onRefresh={props.onRefresh}
+        onEdit={props.onEdit}
+      />
       <div className="note">
         <h1>{props.title}</h1>
         <p>{props.content}</p>

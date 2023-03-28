@@ -16,13 +16,7 @@ export default function FormDialog(props) {
   });
 
   const handleEdit = () => {
-    Axios.put("http://localhost:3000/edit", {
-      id: editValues.id,
-      title: editValues.title,
-      content: editValues.content,
-    }).then(() => {
-      props.onRefresh();
-    });
+    props.onEdit(editValues);
     handleClose();
   };
 

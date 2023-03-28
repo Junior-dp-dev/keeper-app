@@ -19,13 +19,7 @@ function CreateArea(props) {
   function submitNote(event) {
     setNote({ title: "", content: "" });
     event.preventDefault();
-
-    Axios.post("http://localhost:3000/register", {
-      title: note.title,
-      content: note.content,
-    }).then(() => {
-      props.onRefresh();
-    });
+    props.onSubmit(note);
   }
 
   function expandInput() {
